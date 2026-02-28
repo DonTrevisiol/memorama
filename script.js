@@ -1,114 +1,128 @@
 // script.js
-const totalCards = 12;
-const availableCards = ['A', 'K', 'Q', 'J'];
-let cards = [];
-let selectedCards = [];
-let valuesUsed = [];
-let currentMove = 0;
-let currentAttempts = 0;
+let modoSeleccionado = null;
+let primeraCarta = null;
+let segundaCarta = null;
+let bloqueado = false;
+let intentos = 0;
 
-let cardTemplate = '<div class="card"><div class="back"></div><div class="face"></div></div>';
+const btnHiragana = document.getElementById("btn-hiragana");
+const btnKatakana = document.getElementById("btn-katakana");
+const btnComenzar = document.getElementById("comenzar");
 
-function activate(e) {
-   if (currentMove < 2) {
-      
-      if ((!selectedCards[0] || selectedCards[0] !== e.target) && !e.target.classList.contains('active') ) {
-         e.target.classList.add('active');
-         selectedCards.push(e.target);
+const menu = document.getElementById("menu");
+const game = document.getElementById("game");
+const tablero = document.getElementById("game-board");
+const intentosSpan = document.getElementById("intentos");
 
-         if (++currentMove == 2) {
+btnHiragana.addEventListener("click", () => {
+  modoSeleccionado = "hiragana";
+  btnHiragana.classList.add("activo");
+  btnKatakana.classList.remove("activo");
+});
 
-            currentAttempts++;
-            document.querySelector('#stats').innerHTML = currentAttempts + ' intentos';
+btnKatakana.addEventListener("click", () => {
+  modoSeleccionado = "katakana";
+  btnKatakana.classList.add("activo");
+  btnHiragana.classList.remove("activo");
+});
 
-            if (selectedCards[0].querySelectorAll('.face')[0].innerHTML == selectedCards[1].querySelectorAll('.face')[0].innerHTML) {
-               selectedCards = [];
-               currentMove = 0;
-            }
-            else {
-               setTimeout(() => {
-                  selectedCards[0].classList.remove('active');
-                  selectedCards[1].classList.remove('active');
-                  selectedCards = [];
-                  currentMove = 0;
-               }, 600);
-            }
-         }
-      }
-   }
+btnComenzar.addEventListener("click", () => {
+  if (!modoSeleccionado) {
+    alert("Selecciona Hiragana o Katakana");
+    return;
+  }
+
+  iniciarJuego();
+});
+
+function iniciarJuego() {
+  intentos = 0;
+  intentosSpan.textContent = intentos;
+  primeraCarta = null;
+  segundaCarta = null;
+  bloqueado = false;
+
+  menu.classList.add("hidden");
+  game.classList.remove("hidden");
+
+  const incluirDakuten = document.getElementById("dakuten").checked;
+  const incluirHandakuten = document.getElementById("handakuten").checked;
+
+  let base = obtenerBase(modoSeleccionado, incluirDakuten, incluirHandakuten);
+
+  const cantidadPares = 8; // 16 cartas
+  let seleccionados = mezclarArray(base).slice(0, cantidadPares);
+  let cartas = mezclarArray([...seleccionados, ...seleccionados]);
+
+  renderizarCartas(cartas);
 }
 
-function createDeck(data) {
-  let deck = [];
+function obtenerBase(modo, dakuten, handakuten) {
+  let hiraganaBase = ["あ","い","う","え","お","か","き","く","け","こ"];
+  let katakanaBase = ["ア","イ","ウ","エ","オ","カ","キ","ク","ケ","コ"];
 
-  data.forEach((item, index) => {
+  let dakutenSet = ["が","ぎ","ぐ","げ","ご"];
+  let handakutenSet = ["ぱ","ぴ","ぷ","ぺ","ぽ"];
 
-    deck.push({
-      id: index,
-      type: "kana",
-      value: item.kana
-    });
+  let base = modo === "hiragana" ? hiraganaBase : katakanaBase;
 
-    deck.push({
-      id: index,
-      type: "romaji",
-      value: item.romaji
-    });
+  if (dakuten) base = base.concat(dakutenSet);
+  if (handakuten) base = base.concat(handakutenSet);
 
+  return base;
+}
+
+function mezclarArray(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function renderizarCartas(cartas) {
+  tablero.innerHTML = "";
+
+  cartas.forEach(valor => {
+    const carta = document.createElement("div");
+    carta.classList.add("card");
+    carta.dataset.valor = valor;
+    carta.textContent = "";
+
+    carta.addEventListener("click", () => manejarClick(carta));
+
+    tablero.appendChild(carta);
   });
-
-  return shuffle(deck);
 }
 
-function renderCard(card) {
-  if (card.type === "kana") {
-    return `
-      <div class="card-content">
-        <span class="kana">${card.value}</span>
-      </div>
-    `;
+function manejarClick(carta) {
+  if (bloqueado) return;
+  if (carta.classList.contains("revelada")) return;
+
+  carta.textContent = carta.dataset.valor;
+  carta.classList.add("revelada");
+
+  if (!primeraCarta) {
+    primeraCarta = carta;
+    return;
+  }
+
+  segundaCarta = carta;
+  bloqueado = true;
+  intentos++;
+  intentosSpan.textContent = intentos;
+
+  if (primeraCarta.dataset.valor === segundaCarta.dataset.valor) {
+    resetSeleccion();
   } else {
-    return `
-      <div class="card-content">
-        <span class="romaji">${card.value}</span>
-      </div>
-    `;
+    setTimeout(() => {
+      primeraCarta.textContent = "";
+      segundaCarta.textContent = "";
+      primeraCarta.classList.remove("revelada");
+      segundaCarta.classList.remove("revelada");
+      resetSeleccion();
+    }, 800);
   }
 }
 
-
-
-
-if (firstCard.id === secondCard.id && firstCard !== secondCard) {
-   // MATCH
-}
-
-
-function randomValue() {
-   let rnd = Math.floor(Math.random() * totalCards * 0.5);
-   let values = valuesUsed.filter(value => value === rnd);
-   if (values.length < 2) {
-      valuesUsed.push(rnd);
-   }
-   else {
-      randomValue();
-   }
-}
-
-function getFaceValue(value) {
-   let rtn = value;
-   if (value < availableCards.length) {
-      rtn = availableCards[value];
-   }
-   return rtn;
-}
-
-for (let i=0; i < totalCards; i++) {
-   let div = document.createElement('div');
-   div.innerHTML = cardTemplate;
-   cards.push(div);
-   document.querySelector('#game').append(cards[i]);
-   randomValue();
-   cards[i].querySelectorAll('.face')[0].innerHTML = getFaceValue(valuesUsed[i]);
-   cards[i].querySelectorAll('.card')[0].addEventListener('click', activate);
+function resetSeleccion() {
+  primeraCarta = null;
+  segundaCarta = null;
+  bloqueado = false;
 }
