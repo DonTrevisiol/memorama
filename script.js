@@ -38,6 +38,52 @@ function activate(e) {
    }
 }
 
+function createDeck(data) {
+  let deck = [];
+
+  data.forEach((item, index) => {
+
+    deck.push({
+      id: index,
+      type: "kana",
+      value: item.kana
+    });
+
+    deck.push({
+      id: index,
+      type: "romaji",
+      value: item.romaji
+    });
+
+  });
+
+  return shuffle(deck);
+}
+
+function renderCard(card) {
+  if (card.type === "kana") {
+    return `
+      <div class="card-content">
+        <span class="kana">${card.value}</span>
+      </div>
+    `;
+  } else {
+    return `
+      <div class="card-content">
+        <span class="romaji">${card.value}</span>
+      </div>
+    `;
+  }
+}
+
+
+
+
+if (firstCard.id === secondCard.id && firstCard !== secondCard) {
+   // MATCH
+}
+
+
 function randomValue() {
    let rnd = Math.floor(Math.random() * totalCards * 0.5);
    let values = valuesUsed.filter(value => value === rnd);

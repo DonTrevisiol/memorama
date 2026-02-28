@@ -1,0 +1,8 @@
+export const onlyHiraganaVocals = [
+  { kana: "あ", romaji: "a" },
+  { kana: "い", romaji: "i" },
+  { kana: "う", romaji: "u" },
+  { kana: "え", romaji: "e" },
+  { kana: "お", romaji: "o" }
+];
+
