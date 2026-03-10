@@ -1,128 +1,252 @@
-// script.js
-let modoSeleccionado = null;
-let primeraCarta = null;
-let segundaCarta = null;
-let bloqueado = false;
-let intentos = 0;
+// /memorama/script.js
+import { hiraganaBase, hiraganaDakuten, hiraganaHandakuten } from "./data/hiragana/hiragana.js"
+import { katakanaBase, katakanaDakuten, katakanaHandakuten } from "./data/katakana/katakana.js"
 
-const btnHiragana = document.getElementById("btn-hiragana");
-const btnKatakana = document.getElementById("btn-katakana");
-const btnComenzar = document.getElementById("comenzar");
+let modoJuego="normal"
+let sistema="hiragana"
+let primeraCarta=null
+let segundaCarta=null
+let bloqueado=false
+let intentos=0
+let aciertos=0
 
-const menu = document.getElementById("menu");
-const game = document.getElementById("game");
-const tablero = document.getElementById("game-board");
-const intentosSpan = document.getElementById("intentos");
+const menu=document.getElementById("menu")
+const game=document.getElementById("game")
+const tablero=document.getElementById("game-board")
+const intentosSpan=document.getElementById("intentos")
+const aciertosSpan=document.getElementById("aciertos")
 
-btnHiragana.addEventListener("click", () => {
-  modoSeleccionado = "hiragana";
-  btnHiragana.classList.add("activo");
-  btnKatakana.classList.remove("activo");
-});
-
-btnKatakana.addEventListener("click", () => {
-  modoSeleccionado = "katakana";
-  btnKatakana.classList.add("activo");
-  btnHiragana.classList.remove("activo");
-});
-
-btnComenzar.addEventListener("click", () => {
-  if (!modoSeleccionado) {
-    alert("Selecciona Hiragana o Katakana");
-    return;
-  }
-
-  iniciarJuego();
-});
-
-function iniciarJuego() {
-  intentos = 0;
-  intentosSpan.textContent = intentos;
-  primeraCarta = null;
-  segundaCarta = null;
-  bloqueado = false;
-
-  menu.classList.add("hidden");
-  game.classList.remove("hidden");
-
-  const incluirDakuten = document.getElementById("dakuten").checked;
-  const incluirHandakuten = document.getElementById("handakuten").checked;
-
-  let base = obtenerBase(modoSeleccionado, incluirDakuten, incluirHandakuten);
-
-  const cantidadPares = 8; // 16 cartas
-  let seleccionados = mezclarArray(base).slice(0, cantidadPares);
-  let cartas = mezclarArray([...seleccionados, ...seleccionados]);
-
-  renderizarCartas(cartas);
+document.getElementById("volver-menu").onclick=()=>{
+location.reload()
 }
 
-function obtenerBase(modo, dakuten, handakuten) {
-  let hiraganaBase = ["あ","い","う","え","お","か","き","く","け","こ"];
-  let katakanaBase = ["ア","イ","ウ","エ","オ","カ","キ","ク","ケ","コ"];
 
-  let dakutenSet = ["が","ぎ","ぐ","げ","ご"];
-  let handakutenSet = ["ぱ","ぴ","ぷ","ぺ","ぽ"];
 
-  let base = modo === "hiragana" ? hiraganaBase : katakanaBase;
-
-  if (dakuten) base = base.concat(dakutenSet);
-  if (handakuten) base = base.concat(handakutenSet);
-
-  return base;
+window.selectMode=function(mode){
+modoJuego=mode
+document.getElementById("step-mode").classList.add("hidden")
+document.getElementById("step-writing").classList.remove("hidden")
 }
 
-function mezclarArray(array) {
-  return array.sort(() => Math.random() - 0.5);
+
+
+window.startGame=function(sys){
+sistema=sys
+iniciarJuego()
 }
 
-function renderizarCartas(cartas) {
-  tablero.innerHTML = "";
+function iniciarJuego(){
+	
+tablero.innerHTML=""
 
-  cartas.forEach(valor => {
-    const carta = document.createElement("div");
-    carta.classList.add("card");
-    carta.dataset.valor = valor;
-    carta.textContent = "";
-
-    carta.addEventListener("click", () => manejarClick(carta));
-
-    tablero.appendChild(carta);
-  });
+menu.classList.add("hidden")
+game.classList.remove("hidden")
+intentos=0
+aciertos=0
+intentosSpan.textContent=0
+aciertosSpan.textContent=0
+let base=[]
+let dakuten=[]
+let handakuten=[]
+if(sistema==="hiragana"){
+base=[...hiraganaBase]
+dakuten=[...hiraganaDakuten]
+handakuten=[...hiraganaHandakuten]	
 }
 
-function manejarClick(carta) {
-  if (bloqueado) return;
-  if (carta.classList.contains("revelada")) return;
+if(sistema==="katakana"){
+base=[...katakanaBase]
+dakuten=[...katakanaDakuten]
+handakuten=[...katakanaHandakuten]
+}
+console.log("base: ", base)
+const usarDakuten=document.getElementById("dakuten").checked
+const usarHandakuten=document.getElementById("handakuten").checked
 
-  carta.textContent = carta.dataset.valor;
-  carta.classList.add("revelada");
-
-  if (!primeraCarta) {
-    primeraCarta = carta;
-    return;
-  }
-
-  segundaCarta = carta;
-  bloqueado = true;
-  intentos++;
-  intentosSpan.textContent = intentos;
-
-  if (primeraCarta.dataset.valor === segundaCarta.dataset.valor) {
-    resetSeleccion();
-  } else {
-    setTimeout(() => {
-      primeraCarta.textContent = "";
-      segundaCarta.textContent = "";
-      primeraCarta.classList.remove("revelada");
-      segundaCarta.classList.remove("revelada");
-      resetSeleccion();
-    }, 800);
-  }
+if(usarDakuten){
+base = base.concat(dakuten)
 }
 
-function resetSeleccion() {
-  primeraCarta = null;
-  segundaCarta = null;
-  bloqueado = false;
+if(usarHandakuten){
+base = base.concat(handakuten)
+}
+
+
+
+const pares = mezclar([...base]).slice(0,8)
+
+
+
+let cartas=[]
+
+
+
+pares.forEach(p=>{
+
+if(modoJuego==="normal"){
+
+cartas.push({valor:p.kana,match:p.kana})
+cartas.push({valor:p.kana,match:p.kana})
+
+}
+
+else{
+
+cartas.push({valor:p.kana,match:p.romaji})
+cartas.push({valor:p.romaji,match:p.kana})
+
+}
+
+})
+
+
+
+cartas=mezclar(cartas)
+
+renderizar(cartas)
+
+}
+
+function renderizar(cartas){
+
+tablero.innerHTML=""
+
+cartas.forEach(c=>{
+
+const card=document.createElement("div")
+card.classList.add("card")
+
+card.dataset.valor=c.valor
+card.dataset.match=c.match
+
+const back=document.createElement("div")
+back.classList.add("card-face","card-back")
+
+const front=document.createElement("div")
+front.classList.add("card-face","card-front")
+
+front.textContent=c.valor
+
+card.appendChild(back)
+card.appendChild(front)
+
+card.onclick=()=>clickCarta(card)
+tablero.appendChild(card)
+
+})
+
+}
+
+function clickCarta(carta){
+
+if(bloqueado) return
+if(carta.classList.contains("flip")) return
+
+carta.classList.add("flip")
+
+if(!primeraCarta){
+
+primeraCarta=carta
+return
+
+}
+
+segundaCarta=carta
+
+bloqueado=true
+
+verificar()
+
+}
+
+function verificar(){
+
+const match=
+
+primeraCarta.dataset.valor===segundaCarta.dataset.match ||
+segundaCarta.dataset.valor===primeraCarta.dataset.match
+
+if(match){
+
+aciertos++
+
+aciertosSpan.textContent=aciertos
+
+if(aciertos===8){
+setTimeout(mostrarVictoria,500)
+}
+
+reset()
+
+}
+
+
+
+else{
+
+intentos++
+
+intentosSpan.textContent=intentos
+
+setTimeout(()=>{
+
+primeraCarta.classList.remove("flip")
+segundaCarta.classList.remove("flip")
+
+reset()
+
+},1800)
+
+}
+
+}
+
+
+function reset(){
+
+primeraCarta=null
+segundaCarta=null
+bloqueado=false
+
+}
+
+function mezclar(array){
+
+for(let i=array.length-1;i>0;i--){
+
+let j=Math.floor(Math.random()*(i+1))
+let temp=array[i]
+array[i]=array[j]
+array[j]=temp
+}
+
+return array
+
+}
+
+function mostrarVictoria(){
+
+document.getElementById("game").classList.add("hidden")
+
+const victory = document.getElementById("victory")
+victory.classList.remove("hidden")
+
+document.getElementById("victory-intentos").textContent = intentos
+
+}
+
+
+document.getElementById("play-again").onclick=()=>{
+document.getElementById("victory").classList.add("hidden")
+iniciarJuego()
+}
+
+document.getElementById("back-menu").onclick=()=>{
+document.getElementById("victory").classList.add("hidden")
+
+game.classList.add("hidden")
+menu.classList.remove("hidden")
+
+document.getElementById("step-writing").classList.add("hidden")
+document.getElementById("step-mode").classList.remove("hidden")
 }

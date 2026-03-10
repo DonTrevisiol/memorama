@@ -1,42 +1,123 @@
-<!--	index.html	-->
+<!--/memorama/index.html-->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Memorama Japonés</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memorama Japonés 日本語メモリーゲーム</title>
+<link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-  <div id="menu">
-    <h1>Memorama Japonés</h1>
+<div id="menu">
+<p>V. 1.0</p>
+<h1>
+Memorama Japonés<br>
+日本語メモリーゲーム
+</h1>
 
-    <div class="modo">
-      <button id="btn-hiragana" class="btn-main">Hiragana ひらがな</button>
-      <button id="btn-katakana" class="btn-main">Katakana　カタカナ</button>
-    </div>
+<div id="step-mode" class="menu-step">
 
-    <div class="checks">
-      <label>
-        <input type="checkbox" id="dakuten">
-        Incluir Dakuten
-      </label>
+<h2>
+Seleccione modo de juego<br>
+ゲームモードを選択
+</h2>
 
-      <label>
-        <input type="checkbox" id="handakuten">
-        Incluir Handakuten
-      </label>
-    </div>
+<button onclick="selectMode('normal')" id="modo-normal">
+Modo normal<br>
+ノーマルモード
+</button>
 
-    <button id="comenzar" class="btn-start">Comenzar</button>
-  </div>
+<button onclick="selectMode('educativo')" id="modo-educativo">
+Modo educativo<br>
+学習モード
+</button>
 
-  <div id="game" class="hidden">
-    <h2>Intentos: <span id="intentos">0</span></h2>
-    <div id="game-board"></div>
-  </div>
+</div>
 
-  <script src="script.js"></script>
+
+<div id="step-writing" class="menu-step hidden">
+
+<h2>
+Seleccione el sistema de escritura<br>
+文字システムを選択
+</h2>
+
+<button onclick="startGame('hiragana')" id="btn-hiragana">
+Hiragana ひらがな
+</button>
+
+<button onclick="startGame('katakana')" id="btn-katakana">
+Katakana カタカナ
+</button>
+
+<div class="options">
+
+<label>
+<input type="checkbox" id="dakuten">
+Incluir Dakuten<br>
+濁点を含める
+</label>
+
+<label>
+<input type="checkbox" id="handakuten">
+Incluir Handakuten<br>
+半濁点を含める
+</label>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div id="game" class="hidden">
+
+<h2 id="score">
+Intentos 試行:
+<span id="intentos">0</span>
+|
+Aciertos 正解:
+<span id="aciertos">0</span>
+</h2>
+
+<div id="game-board"></div>
+
+<button id="volver-menu">
+⬅ Volver al menú<br>
+メニューに戻る
+</button>
+
+</div>
+
+<div id="victory" class="hidden">
+
+<h1>
+おめでとう！<br>
+¡Juego completado!
+</h1>
+
+<p>
+Intentos 試行: <span id="victory-intentos"></span>
+</p>
+
+<button id="play-again">
+🔁 Jugar otra vez<br>
+もう一度プレイ
+</button>
+
+<button id="back-menu">
+⬅ Volver al menú<br>
+メニューに戻る
+</button>
+
+</div>
+
+
+<script type="module" src="script.js"></script>
+
 </body>
 </html>
-
