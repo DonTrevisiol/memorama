@@ -195,7 +195,7 @@ segundaCarta.classList.remove("flip")
 
 reset()
 
-},1800)
+},800)
 
 }
 
