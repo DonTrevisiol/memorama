@@ -11,7 +11,7 @@
 <body>
 
 <div id="menu">
-<p>V. 1.0</p>
+<p>V. 1.5</p>
 <h1>
 Memorama Japonés<br>
 日本語メモリーゲーム
@@ -34,8 +34,29 @@ Modo educativo<br>
 学習モード
 </button>
 
+<button onclick="selectMode('contrarreloj')">
+Modo contrarreloj<br>
+タイムアタック
+</button>
+
+
+<br><br>
+<br><br>
+<div id="menu-extra">
+
+<button id="btn-reglas">
+Reglas<br>
+ルール
+</button>
+
+<button id="btn-tablas">
+Tablas<br>
+ランキング
+</button>
+
 </div>
 
+</div>
 
 <div id="step-writing" class="menu-step hidden">
 
@@ -73,6 +94,37 @@ Incluir Handakuten<br>
 </div>
 
 
+<div id="rules" class="hidden">
+
+<h2>
+Reglas del juego<br>
+ゲームルール
+</h2>
+
+<p>
+
+<strong>Modo normal</strong><br>
+Encuentra pares de caracteres idénticos.<br>
+同じ文字のペアを見つけます。<br><br>
+
+<strong>Modo educativo</strong><br>
+Relaciona el carácter japonés con su romaji.<br>
+日本語の文字とローマ字を一致させます。<br><br>
+
+<strong>Modo contrarreloj</strong><br>
+Encuentra la mayor cantidad de pares antes de que el tiempo termine.<br>
+ペアを見つけると時間が2秒追加されます。<br>
+時間がなくなるまで続きます。
+
+</p>
+
+<button id="cerrar-reglas">
+Volver<br>
+戻る
+</button>
+
+</div>
+
 
 <div id="game" class="hidden">
 
@@ -83,7 +135,11 @@ Intentos 試行:
 Aciertos 正解:
 <span id="aciertos">0</span>
 </h2>
-
+<h2 id="timer">
+時間 Tiempo ⏱:
+<span id="tiempo">0</span>
+<span id="bonus-tiempo"></span>
+</h2>
 <div id="game-board"></div>
 
 <button id="volver-menu">

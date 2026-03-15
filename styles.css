@@ -56,6 +56,14 @@ margin-bottom:20px;
 padding:10px;
 }
 
+#bonus-tiempo{
+margin-left:10px;
+color:#00ff88;
+font-weight:bold;
+opacity:0;
+transition:opacity 0.4s;
+}
+
 /* TABLERO */
 
 #game-board{
@@ -68,6 +76,16 @@ grid-template-columns:repeat(4,1fr);
 gap:10px;
 
 }
+
+#menu-extra{
+margin-top:40px;
+}
+
+#menu-extra button{
+background:#444;
+color:white;
+}
+
 
 /* CARTA */
 
