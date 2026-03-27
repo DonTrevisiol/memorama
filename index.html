@@ -1,179 +1,180 @@
-<!--/memorama/index.html-->
+<!-- ./memorama/index.html-->
 <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Memorama Japonés 日本語メモリーゲーム</title>
-<link rel="stylesheet" href="styles.css">
-</head>
+	<html lang="es">
+		<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Memorama Japonés 日本語メモリーゲーム</title>
+			<link rel="icon" href="./assets/images/favicon.ico" type="image/x-icon">
+			<link rel="stylesheet" href="styles.css">
+		</head>
 
-<body>
+		<body>
+			<div id="menu">
+				<p>V. 2.0</p>
+				<h1>
+					Memorama Japonés<br>
+					日本語メモリーゲーム
+				</h1>
 
-<div id="menu">
-<p>V. 1.5</p>
-<h1>
-Memorama Japonés<br>
-日本語メモリーゲーム
-</h1>
+				<div id="step-mode" class="menu-step">
 
-<div id="step-mode" class="menu-step">
+					<h2>
+						Seleccione modo de juego<br>
+						ゲームモードを選択
+					</h2>
 
-<h2>
-Seleccione modo de juego<br>
-ゲームモードを選択
-</h2>
+				<button id="modo-normal">
+					Modo normal<br>
+					ノーマルモード
+				</button>
 
-<button onclick="selectMode('normal')" id="modo-normal">
-Modo normal<br>
-ノーマルモード
-</button>
+				<button id="modo-educativo">
+					Modo educativo<br>
+					学習モード
+				</button>
 
-<button onclick="selectMode('educativo')" id="modo-educativo">
-Modo educativo<br>
-学習モード
-</button>
+				<button id="modo-contrarreloj">
+					Modo contrarreloj<br>
+					タイムアタック
+				</button>
+				<br><br>
+				<br><br>
+				<div id="menu-extra">
 
-<button onclick="selectMode('contrarreloj')">
-Modo contrarreloj<br>
-タイムアタック
-</button>
+					<button id="btn-reglas">
+						Reglas<br>
+						ルール
+					</button>
 
+					<button id="btn-tablas">
+						Tablas<br>
+						ランキング
+					</button>
+					<footer>
+						<p>valentin.trevi@gmail.com</p>
+					</footer>
+				</div>
+			</div>
+			
+			<div id="step-writing" class="menu-step hidden">
 
-<br><br>
-<br><br>
-<div id="menu-extra">
+				<h2>
+					Seleccione el sistema de escritura<br>
+					文字システムを選択
+				</h2>
 
-<button id="btn-reglas">
-Reglas<br>
-ルール
-</button>
+				<button id="btn-hiragana">
+					Hiragana ひらがな
+				</button>
 
-<button id="btn-tablas">
-Tablas<br>
-ランキング
-</button>
+				<button id="btn-katakana">
+					Katakana カタカナ
+				</button>
 
-</div>
+				<div class="options">
 
-</div>
+					<label>
+						<input type="checkbox" id="dakuten">
+							Incluir Dakuten<br>
+							濁点を含める
+					</label>
 
-<div id="step-writing" class="menu-step hidden">
+					<label>
+						<input type="checkbox" id="handakuten">
+							Incluir Handakuten<br>
+							半濁点を含める
+					</label>
 
-<h2>
-Seleccione el sistema de escritura<br>
-文字システムを選択
-</h2>
+					</div>
 
-<button onclick="startGame('hiragana')" id="btn-hiragana">
-Hiragana ひらがな
-</button>
+				</div>
 
-<button onclick="startGame('katakana')" id="btn-katakana">
-Katakana カタカナ
-</button>
+			</div>
 
-<div class="options">
+<div id="ranking" class="hidden">
 
-<label>
-<input type="checkbox" id="dakuten">
-Incluir Dakuten<br>
-濁点を含める
-</label>
+				<h1>
+					🏆 Ranking<br>
+					ランキング
+				</h1>
 
-<label>
-<input type="checkbox" id="handakuten">
-Incluir Handakuten<br>
-半濁点を含める
-</label>
+				<div id="ranking-content"></div>
 
-</div>
+				<button id="cerrar-ranking">
+					Volver<br>
+					戻る
+				</button>
 
-</div>
+			</div>
+			
+<!--	========	REGLAS DEL JUEGO	========	-->
+			<div id="rules" class="hidden">
+				<h2>
+					Reglas del juego<br>
+					ゲームルール
+				</h2>
+				<p>
+					<strong>Modo normal</strong><br>
+					Encuentra pares de caracteres idénticos.<br>
+					同じ文字のペアを見つけます。<br><br>
 
-</div>
+					<strong>Modo educativo</strong><br>
+					Relaciona el carácter japonés con su romaji.<br>
+					日本語の文字とローマ字を一致させます。<br><br>
 
+					<strong>Modo contrarreloj</strong><br>
+					Encuentra la mayor cantidad de pares antes de que el tiempo termine.<br>
+					ペアを見つけると時間が2秒追加されます。<br>
+					時間がなくなるまで続きます。
+				</p>
+				<button id="cerrar-reglas">
+					Volver<br>
+					戻る
+				</button>
+			</div>
+<!--	========	JUEGO	========	-->
+			<div id="game" class="hidden">
 
-<div id="rules" class="hidden">
+				<h2 id="score">
+					Intentos 試行:
+					<span id="intentos">0</span>
+					|
+					Aciertos 正解:
+					<span id="aciertos">0</span>
+				</h2>
+				<h2 id="timer">
+					時間 Tiempo ⏱:
+					<span id="tiempo">0</span>
+					<span id="bonus-tiempo"></span>
+				</h2>
+			<div id="game-board"></div>
 
-<h2>
-Reglas del juego<br>
-ゲームルール
-</h2>
+				<button id="volver-menu">
+					⬅ Volver al menú<br>
+					メニューに戻る
+				</button>
 
-<p>
+			</div>
 
-<strong>Modo normal</strong><br>
-Encuentra pares de caracteres idénticos.<br>
-同じ文字のペアを見つけます。<br><br>
+			<div id="victory" class="hidden">
+				<h1>
+					おめでとう！<br>
+					¡Juego completado!
+				</h1>
+				<p>
+					Intentos 試行: <span id="victory-intentos"></span>
+				</p>
+				<button id="play-again">
+					🔁 Jugar otra vez<br>
+					もう一度プレイ
+				</button>
+				<button id="back-menu">
+					⬅ Volver al menú<br>
+					メニューに戻る
+				</button>
+			</div>
+			<script type="module" src="script.js"></script>
 
-<strong>Modo educativo</strong><br>
-Relaciona el carácter japonés con su romaji.<br>
-日本語の文字とローマ字を一致させます。<br><br>
-
-<strong>Modo contrarreloj</strong><br>
-Encuentra la mayor cantidad de pares antes de que el tiempo termine.<br>
-ペアを見つけると時間が2秒追加されます。<br>
-時間がなくなるまで続きます。
-
-</p>
-
-<button id="cerrar-reglas">
-Volver<br>
-戻る
-</button>
-
-</div>
-
-
-<div id="game" class="hidden">
-
-<h2 id="score">
-Intentos 試行:
-<span id="intentos">0</span>
-|
-Aciertos 正解:
-<span id="aciertos">0</span>
-</h2>
-<h2 id="timer">
-時間 Tiempo ⏱:
-<span id="tiempo">0</span>
-<span id="bonus-tiempo"></span>
-</h2>
-<div id="game-board"></div>
-
-<button id="volver-menu">
-⬅ Volver al menú<br>
-メニューに戻る
-</button>
-
-</div>
-
-<div id="victory" class="hidden">
-
-<h1>
-おめでとう！<br>
-¡Juego completado!
-</h1>
-
-<p>
-Intentos 試行: <span id="victory-intentos"></span>
-</p>
-
-<button id="play-again">
-🔁 Jugar otra vez<br>
-もう一度プレイ
-</button>
-
-<button id="back-menu">
-⬅ Volver al menú<br>
-メニューに戻る
-</button>
-
-</div>
-
-
-<script type="module" src="script.js"></script>
-
-</body>
-</html>
+		</body>
+	</html>
