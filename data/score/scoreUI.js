@@ -36,7 +36,7 @@ export async function renderRanking(containerId){
 	if(index === 2) medalla = "🥉 "
 
 	item.textContent =
-		`${medalla}${jugador.nombre} — ${jugador.rondas} rondas | ${jugador.aciertos} aciertos | ${jugador.intentos} intentos`
+		`${medalla}${jugador.nombre} — ラウンド ${jugador.rondas} rondas | 正解 ${jugador.aciertos} aciertos | 試行 ${jugador.intentos} intentos`
         
         //ESTILOS DE LOS TOP:
         if(index === 0){
